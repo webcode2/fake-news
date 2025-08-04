@@ -2,6 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { Send } from "lucide-react";
 import { Transition } from "@headlessui/react";
 import Header from "../components/header";
+import axios from "axios";
+import SentimentMarkdown from "../components/markdownCoponent";
+import { AIChatSession } from "../services/aiMdel";
+const baseURL = "http://localhost:8000"; // Adjust this to your backend URL if needed
+
 
 export default function ChatInterface() {
     const [messages, setMessages] = useState([
@@ -11,6 +16,46 @@ export default function ChatInterface() {
     const bottomRef = useRef(null);
 
     const [input, setInput] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [model, setModel] = useState("grox");
+
+
+    let prompt = `Analyze the following sentiment output: {raw_sentiment}
+Context: {asked_prompt}
+
+Instructions:
+1. Classify the sentiment as **Positive**, **Neutral**, or **Negative**.
+2. Provide a **score breakdown** (percentage for each class).
+3. Summarize the most likely sentiment in 1-2 sentences.
+4. Assess whether the input might contain **misinformation or be harmful** (respond with Yes/No and a brief reason).
+5. Estimate a **truth_likelihood** score: High, Medium, or Low.
+6. Set **flagged**: true if the input is misleading, dangerous, or needs moderation; otherwise, false.
+
+Respond using a structured, machine-readable markdown block with short, direct answers.
+Avoid emotional or verbose language`
+
+
+
+    const geminiAiChatSession = async ({ raw_sentiment, asked_prompt }) => {
+        // Initialize the AI chat session here if needed
+        const PROMPT = prompt.replace("{raw_sentiment}", raw_sentiment).replace("{asked_prompt}", asked_prompt);
+
+        try {
+            const result = await AIChatSession.sendMessage(PROMPT);
+
+            console.log("AI Response:", result);
+            // remove message with state "loading"
+
+            setMessages((prev) => [...prev, { role: "assistant", content: <SentimentMarkdown response={JSON.parse(result.response.candidates[0].content.parts[0].text)} /> }]);
+
+
+        } catch (error) {
+            setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I couldn't process your request at the moment." }]);
+            console.error("Error during AI chat session:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSend = () => {
         const text = input.trim();
@@ -21,6 +66,37 @@ export default function ChatInterface() {
             inputRef.current.innerText = "";
             inputRef.current.style.height = "auto";
         }
+
+
+
+        // Send the message to the backend        // Assuming you have an API endpoint set up to handle chat messages
+        // Adjust the URL as necessary for your backend
+        setLoading(true);
+
+
+        axios.post(`${baseURL}/api/messages/`, { text: text })
+            .then((response) => {
+                console.log("Response from backend:", response.data);
+
+
+
+                // Assuming the response contains a message field with the assistant's reply
+                // setMessages((prev) => [...prev, { role: "assistant", content: <SentimentMarkdown response={assistantMessage} /> }]);
+                if (model === "gemini") {
+                    setLoading(false);
+                    setMessages((prev) => [...prev, { role: "assistant", state: "loading", content: <SentimentMarkdown response={JSON.parse(response.data.sentiment.data)} /> }]);
+                } else {
+                    const assistantMessage = JSON.stringify(response.data.sentiment[0]); // Adjust based on your API response structure
+
+                    geminiAiChatSession({ raw_sentiment: assistantMessage, asked_prompt: text });
+                }
+            })
+            .catch((error) => {
+                console.error("Error sending message:", error);
+                setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, something went wrong." }]);
+            });
+
+
     };
 
     // Auto scroll to bottom when messages change
