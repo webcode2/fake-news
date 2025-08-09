@@ -24,9 +24,9 @@ const SentimentMarkdown = ({ response }) => {
 **Overall Sentiment:** ${response.overall_sentiment}
 
 ### 📊 Score Breakdown
-- Negative (LABEL_0): ${response.score_breakdown.LABEL_0}
-- Neutral (LABEL_1): ${response.score_breakdown.LABEL_1}
-- Positive (LABEL_2): ${response.score_breakdown.LABEL_2}
+- Negative (LABEL_0): ${response.score_breakdown.LABEL_0 || response.score_breakdown.NEGATIVE}
+- Neutral (LABEL_1): ${response.score_breakdown.LABEL_1 || response.score_breakdown.NEUTRAL}
+- Positive (LABEL_2): ${response.score_breakdown.LABEL_2 || response.score_breakdown.POSITIVE}
 
 ### 📝 Summary
 ${response.summary}
