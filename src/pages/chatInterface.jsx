@@ -23,7 +23,6 @@ export default function ChatInterface() {
 
     let prompt = `Analyze the following sentiment output: {raw_sentiment}
 Context: {asked_prompt}
-note: LABEL_2 represents positive, LABEL_1 represents neutral, and LABEL_0 represents negative.
 
 
 Instructions:
