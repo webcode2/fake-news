@@ -25,7 +25,7 @@ export default function ChatInterface() {
 Context: {asked_prompt}
 
 Instructions:
-note: LABEL_2 is positive, LABEL_1 is neutral, and LABEL_0 is negative.
+note: LABEL_2 represents positive, LABEL_1 represents neutral, and LABEL_0 represents negative.
 1. Classify the sentiment as **Positive**, **Neutral**, or **Negative**.
 2. Provide a **score breakdown** (percentage for each class).
 3. Summarize the most likely sentiment in 1-2 sentences.
@@ -35,7 +35,6 @@ note: LABEL_2 is positive, LABEL_1 is neutral, and LABEL_0 is negative.
 
 Respond using a structured, machine-readable markdown block with short, direct answers.
 Avoid emotional or verbose language`
-
 
 
     const geminiAiChatSession = async ({ raw_sentiment, asked_prompt }) => {
