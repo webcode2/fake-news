@@ -23,7 +23,7 @@ export default function ChatInterface() {
 
     let prompt = `Analyze the following sentiment output: {raw_sentiment}
 Context: {asked_prompt}
-
+note: LABEL_0 = Negative, LABEL_1 = Neutral, LABEL_2 = Positive
 
 Instructions:
 1. Classify the sentiment as **Positive**, **Neutral**, or **Negative**.
@@ -85,9 +85,9 @@ Avoid emotional or verbose language`
                     setLoading(false);
                     setMessages((prev) => [...prev, { role: "assistant", state: "loading", content: <SentimentMarkdown response={JSON.parse(response.data.sentiment.data)} /> }]);
                 } else {
-                    const assistantMessage = JSON.stringify(response.data.sentiment[0]); // Adjust based on your API response structure
-
-                    geminiAiChatSession({ raw_sentiment: assistantMessage, asked_prompt: text });
+                    // const assistantMessage = JSON.stringify(response.data.sentiment[0]); // Adjust based on your API response structure
+                    console.log("Sentiment Data:", response.data.sentiment.data);
+                    geminiAiChatSession({ raw_sentiment: JSON.parse(response.data.sentiment.data), asked_prompt: text });
                 }
             })
             .catch((error) => {
