@@ -75,7 +75,7 @@ Avoid emotional or verbose language`
         setLoading(true);
 
 
-        axios.post(`${baseURL}/api/messages/`, { text: text })
+        axios.post(`${baseURL}/api/messages`, { text: text })
             .then((response) => {
                 console.log("Response from backend:", response.data);
 
