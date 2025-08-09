@@ -86,8 +86,8 @@ Avoid emotional or verbose language`
                     setMessages((prev) => [...prev, { role: "assistant", state: "loading", content: <SentimentMarkdown response={JSON.parse(response.data.sentiment.data)} /> }]);
                 } else {
                     // const assistantMessage = JSON.stringify(response.data.sentiment[0]); // Adjust based on your API response structure
-                    console.log("Sentiment Data:", response.data.sentiment.data);
-                    geminiAiChatSession({ raw_sentiment: JSON.parse(response.data.sentiment.data), asked_prompt: text });
+                    console.log("Sentiment Data:", response.data.sentiment[0]);
+                    geminiAiChatSession({ raw_sentiment: response.data.sentiment[0], asked_prompt: text });
                 }
             })
             .catch((error) => {
