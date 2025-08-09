@@ -21,7 +21,7 @@ export default function ChatInterface() {
     const [model, setModel] = useState("grox");
 
 
-    let prompt = `give the following sentiment output: {raw_sentiment}
+    let prompt = `Analyze the following sentiment output: {raw_sentiment}
 Context: {asked_prompt}
 note: LABEL_0 = Negative, LABEL_1 = Neutral, LABEL_2 = Positive
 
@@ -33,8 +33,7 @@ Instructions:
 5. Estimate a **truth_likelihood** score: High, Medium, or Low.
 6. Set **flagged**: true if the input is misleading, dangerous, or needs moderation; otherwise, false.
 
-Respond using a structured, machine-readable markdown block with short, direct answers.
-Avoid emotional or verbose language`
+`
 
 
     const geminiAiChatSession = async ({ raw_sentiment, asked_prompt }) => {
