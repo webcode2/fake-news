@@ -25,6 +25,7 @@ export default function ChatInterface() {
 Context: {asked_prompt}
 
 Instructions:
+note: LABEL_2 is positive, LABEL_1 is neutral, and LABEL_0 is negative.
 1. Classify the sentiment as **Positive**, **Neutral**, or **Negative**.
 2. Provide a **score breakdown** (percentage for each class).
 3. Summarize the most likely sentiment in 1-2 sentences.
@@ -67,8 +68,6 @@ Avoid emotional or verbose language`
             inputRef.current.innerText = "";
             inputRef.current.style.height = "auto";
         }
-
-
 
         // Send the message to the backend        // Assuming you have an API endpoint set up to handle chat messages
         // Adjust the URL as necessary for your backend
