@@ -5,7 +5,8 @@ import Header from "../components/header";
 import axios from "axios";
 import SentimentMarkdown from "../components/markdownCoponent";
 import { AIChatSession } from "../services/aiMdel";
-const baseURL = "http://localhost:8000"; // Adjust this to your backend URL if needed
+// const baseURL = "http://localhost:8000"; // Adjust this to your backend URL if needed
+const baseURL = "https://fake-news.codeabs.com"; // Adjust this to your backend URL if needed
 
 
 export default function ChatInterface() {
