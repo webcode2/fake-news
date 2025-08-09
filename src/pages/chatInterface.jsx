@@ -21,7 +21,8 @@ export default function ChatInterface() {
     const [model, setModel] = useState("grox");
 
 
-    let prompt = `give reason for the  following sentiment output: {raw_sentiment} for the following context: {asked_prompt}
+    let prompt = `give the following sentiment output: {raw_sentiment}
+Context: {asked_prompt}
 note: LABEL_0 = Negative, LABEL_1 = Neutral, LABEL_2 = Positive
 
 Instructions:
