@@ -51,6 +51,7 @@ Instructions:
 
 
         } catch (error) {
+            console.log("Error during AI chat session:", error);
             setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I couldn't process your request at the moment." }]);
             console.error("Error during AI chat session:", error);
         } finally {
