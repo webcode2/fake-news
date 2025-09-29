@@ -7,7 +7,7 @@ const genAI = new GoogleGenerativeAI(GEMENI_API_KEY, {
 
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
-  // Add any additional model parameters here
+  // Add any additional model parameters
   apiVersion: "v1"
 });
 
