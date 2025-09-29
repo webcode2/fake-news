@@ -93,6 +93,7 @@ Instructions:
             })
             .catch((error) => {
                 console.error("Error sending message:", error);
+                console.log("newnewnewnewnewnewnwe")
                 setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, something went wrong." }]);
             });
 
