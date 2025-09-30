@@ -4,13 +4,10 @@ import { GEMENI_API_KEY } from "../config/config";
 const genAI = new GoogleGenerativeAI(GEMENI_API_KEY, {
   httpOptions: { apiVersion: "v1" }
 });
-
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
-  // Add any additional model parameters
-  apiVersion: "v1"
+  model: "gemini-2.5-flash", // <-- Recommended stable model alias
+  // apiVersion: "v1" // You can often omit this if using the new SDK defaults
 });
-
 const generationConfig = {
   temperature: 1,
   topP: 0.95,

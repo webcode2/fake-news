@@ -33,32 +33,58 @@ Instructions:
 4. Assess whether the input might contain **misinformation or be harmful** (respond with Yes/No and a brief reason).
 5. Estimate a **truth_likelihood** score: High, Medium, or Low.
 6. Set **flagged**: true if the input is misleading, dangerous, or needs moderation; otherwise, false.
+7. Provide a **reason** for the misinformation/harmful assessment in a new field.
+
 
 `
 
 
+    // Assuming 'prompt' is the template string defined outside this function
+    // e.g., let prompt = `Analyze the following sentiment output: {raw_sentiment}\nContext: {asked_prompt}...\n`;
+
     const geminiAiChatSession = async ({ raw_sentiment, asked_prompt }) => {
-        // Initialize the AI chat session here if needed
-        const PROMPT = prompt.replace("{raw_sentiment}", raw_sentiment).replace("{asked_prompt}", asked_prompt);
+        // 1. FIX: Ensure raw_sentiment (which is an object) is converted to a JSON string.
+        // This prevents it from becoming the unhelpful text "[object Object]" in the prompt.
+        const rawSentimentString = JSON.stringify(raw_sentiment);
+
+        // 2. FIX: Use the properly stringified variable in the replacement.
+        const PROMPT = prompt
+            .replace("{raw_sentiment}", rawSentimentString)
+            .replace("{asked_prompt}", asked_prompt);
 
         try {
+            // Assuming AIChatSession.sendMessage and other variables are defined and imported
             const result = await AIChatSession.sendMessage(PROMPT);
 
             console.log("AI Response:", result);
             // remove message with state "loading"
 
-            setMessages((prev) => [...prev, { role: "assistant", content: <SentimentMarkdown response={JSON.parse(result.response.candidates[0].content.parts[0].text)} /> }]);
+            // This line assumes the response is a JSON string in the first part of the first candidate
+            const responseJsonText = result?.response?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            if (responseJsonText) {
+                setMessages((prev) => [
+                    ...prev,
+                    {
+                        role: "assistant",
+                        content: <SentimentMarkdown response={JSON.parse(responseJsonText)} />
+                    }
+                ]);
+            }
 
 
         } catch (error) {
             console.log("Error during AI chat session:", error);
-            setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I couldn't process your request at the moment." }]);
+            setMessages((prev) => [
+                ...prev,
+                { role: "assistant", content: "Sorry, I couldn't process your request at the moment." }
+            ]);
             console.error("Error during AI chat session:", error);
         } finally {
+            // Assuming setLoading is defined and imported
             setLoading(false);
         }
     };
-
     const handleSend = () => {
         const text = input.trim();
         if (!text) return;
@@ -93,7 +119,7 @@ Instructions:
             })
             .catch((error) => {
                 console.error("Error sending message:", error);
-                console.log("newnewnewnewnewnewnwe")
+                console.log
                 setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, something went wrong." }]);
             });
 
